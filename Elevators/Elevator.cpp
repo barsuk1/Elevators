@@ -42,10 +42,12 @@ bool Elevator::setStop(size_t floor, size_t dest)
 	//we already on this floor - update and return
 	if (floor == m_currentFloor) { 
 		updateFromPendingStops();
-		if (m_destFloor == -1)
+		if (m_destFloor == ELEV_IDLE)
 			m_destFloor = dest;
 		return true;
 	}
+	if (m_destFloor == ELEV_IDLE)
+	  m_destFloor = floor;
 	//first set a stop on the pikcup floor and destination
 	m_floors[floor] = true;
 	m_pending[floor].push_back(dest);
@@ -99,7 +101,7 @@ size_t Elevator::getStatus(size_t& curr, size_t& next, vector<bool>& stops)
 
 void Elevator::simulateStep()
 {
-	if (m_destFloor == -1)//while idle - stay at the same floor
+	if (m_destFloor == ELEV_IDLE)//while idle - stay at the same floor
 		return;
 	bool goingUp = false;
 	if (m_currentFloor <= m_destFloor)
@@ -126,16 +128,16 @@ void Elevator::simulateStep()
 
 	if (m_currentFloor == m_destFloor) {
 		updateFromPendingStops();
-		m_destFloor = -1;
+		m_destFloor = ELEV_IDLE;
 		if (goingUp) {
 			checkNextFloorUp();
-			if (m_destFloor == -1)
+			if (m_destFloor == ELEV_IDLE)
 				checkNextFloorDown();
 
 		}
 		else {
 			checkNextFloorDown();
-			if (m_destFloor == -1)
+			if (m_destFloor == ELEV_IDLE)
 				checkNextFloorUp();
 		}
 	}

@@ -103,7 +103,7 @@ void EScheduler::scheduleOne(size_t fromFloor, size_t destFloor)
 		Status stat;
 		stat.idx = i;
 		size_t res = m_elevs[i].getStatus(stat.current, stat.next, stat.floors);
-		if (stat.next == -1) {
+		if (stat.next == ELEV_IDLE) {
 			elevIdle.push_back(stat);
 		}
 		else {

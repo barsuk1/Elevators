@@ -1,9 +1,12 @@
 #pragma once
 #include "stdafx.h"
 using namespace std;
+
+#define ELEV_IDLE -1 
+
 class Elevator {
 public:
-	Elevator(size_t nfloors) :m_floors(nfloors, false), m_pending(nfloors), m_currentFloor(0), m_destFloor(-1) {}
+	Elevator(size_t nfloors) :m_floors(nfloors, false), m_pending(nfloors), m_currentFloor(0), m_destFloor(ELEV_IDLE) {}
 	bool setStop(size_t floor, size_t dest);
 	size_t getNextStop();
 	size_t getStatus(size_t& curr, size_t& dest, vector<bool>& stops);
