@@ -20,7 +20,7 @@ void printStatus(EScheduler& sched)
 	if (floors.empty() ) 
 		return;
 
-	printf("\t\tElevators\n");
+	printf("\t\tElevators where C - Current Floor, N - Dest Floor, * - Stop \n");
 	printf("\t\t\t");
 	for (size_t i = 0; i < pos.size(); i++)
 		printf("%-5lu", i);
@@ -31,8 +31,9 @@ void printStatus(EScheduler& sched)
 		for (size_t f = 0; f < floors.size(); f++) {
 			if (!f)
 				printf("\t");
-			if (pos[f].first == (size_t)i)
+			if (pos[f].first == (size_t)i) {
 				printf("%-5c", 'C');
+			}
 			else if (pos[f].second == (size_t)i)
 				printf("%-5c", 'N');
 			else if (floors[f][i])
