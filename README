@@ -1,0 +1,30 @@
+README
+
+The code for Elevators Control simulation is written in C++11. There is a simple text interface allowing to define the input parameters,
+simlate step, add new call to an elevator, and print a visualization.
+The code was developed on my Windows notebook, using Visual Studio Community 2017
+
+I have made several assumptions while working on the project. 
+Most important one is that the number of elevators and floors is pretty limited, so we can safely iterate over all of them on each one of the scheduling steps without worrying about any performance impact.
+I also assume that there is a Controller/Scheduler that manages all the elevators, and it is able to directly query them. This architecture removes any issues with async communications. 
+
+In reality there might be a need for some kind of Network Protocol between the Scheduler and the elevators and this might bring up the issues of relaibility and of course security, but here the Scheduler simply holds an array of Elevators and direclty calls their methods.
+
+Also I don't have much more time to work on this, so I recognize that the code needs much more testing and error checking. I also know that there is a couple of places where the code should be made more OO with inheritance etc. , but again I leave it as is.
+
+There are two main classes in the code 
+Elevator - it represents a single elevator, which maintains a boolean array of floors, the floor variable is set to true if there is a stop on it. Elevator also holds its current floor and the destination floor - the next floo where it goes. 
+Calling  the Elevator::setStop will add a new pair of floors to the elevator. 
+Calling Elevator::simlateStep will advance the elevator one floor from current to the destination. Once the desitnation is reached the next floor in the same direction will become the destination. Once there are no more floors in this direction, the floors in the opposite direction will be picked , if any. An idle Elevatorstays where it is.
+
+EScheduler - this class holds the Elevators, the main method here is the one that actually does a scheduling decision, once a command arrived. For this purpose first all elevators are queried about their current status.
+The results are split into three groups: 
+1) Idle Elevators
+2) Elevators that are moving towards the <fromFloor> (I call them PickUp Elevators)
+3) All the rest , that are apparently going in the opposite direction
+
+Each one of the groups is sorted and the scheduler will choose one Elevator that has the minimum arrival time for the <fromFloor> from the three minimum values (one for each group). For groups (2) and (3) I'm taking into account the number of stops each Elevator will make before arriving to the <fromFloor> . Scheduler assume that an Elevator in the group (3) will first exhaust all the floors in it's current direction ie it has some knowledge about Elevator behavior. 
+
+There is a possibility in the code to assign different weights to 
+the time it will take the elevator to go from one floor to another, and for the stop time.
+  
